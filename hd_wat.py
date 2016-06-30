@@ -25,20 +25,20 @@ class HDWAT(threading.Thread):
         for n in range(int((end_date - start_date).days)):
             yield start_date + timedelta(n)
 
-    # def getID(self, tablename, idcolumn, columnname, value):
-    #     cursor = self.connection.cursor()
-    #     SQLQuery = 'SELECT ' + idcolumn + ' FROM ' + tablename + ' WHERE ' + columnname + ' = \'' + value + '\';'
-    #     return cursor.execute(SQLQuery).fetchone()[0]
-
     def getPrograms(self):
         if self.channel_links:
             channel_links_temp = self.channel_links
             channel = channel_links_temp.pop()
             try:
+                channelNameURL = str(channel[str(channel).find('http://www.telemagazyn.pl/') + len(
+                    'http://www.telemagazyn.pl/'):str(channel).find('/?dzien=')])
+            except Exception:
+                channelNameURL = ''
+            try:
                 airDate = str(channel[str(channel).find('dzien=') + len('dzien='):])
             except Exception:
                 airDate = ''
-            file = open('D:\szkola\HD_WAT\datascraper\Program.txt', 'a+', encoding='UTF-8')
+            file = open('D:\szkola\HD_WAT\datascraper\Program_2.txt', 'a+', encoding='UTF_8')
             # THREAD ID + channel for testing
             # file.write(str(self.id) + ': '+ str(channel) +'\n')
             response = urllib.request.urlopen(
@@ -49,11 +49,15 @@ class HDWAT(threading.Thread):
                 for line2 in x:
                     # print(line2.find('span').text.strip() + ':' + line2.find('span').string.strip())
                     try:
-                        programName = line2.find('span').text.strip()
+                        programName = str(line2.find('span').text.strip()).replace('\r\n', ' ')
                     except Exception:
                         programName = ''
                     try:
-                        programDescription = line2.find('p').text.strip()
+                        programDescription = str(line2.find('p').text.strip()).splitlines().replace('\r\n',
+                                                                                                    ' ').replace('\r',
+                                                                                                                 '').replace(
+                            '\n', ' ')
+
                     except Exception:
                         programDescription = ''
                     try:
@@ -91,7 +95,7 @@ class HDWAT(threading.Thread):
                             duration = '0'
                         file.write(str(programName) + '|' + str(ageLimit) + '|' + str(programDescription) + '|' + str(
                             programCategory) + '|' + str(timeStart) + '|' + str(timeEnd) + '|' + str(
-                            duration) + '|' + str(airDate) + '\n')
+                            duration) + '|' + str(airDate) + '|' + str(channelNameURL) + '\n')
                     except Exception:
                         pass
             except TypeError:
@@ -100,36 +104,8 @@ class HDWAT(threading.Thread):
         else:
             self.running = False
 
-    # def getProgramsCategory(self):
-    #     # self.dbConnection()
-    #     if self.channel_links:
-    #         channel_links_temp = self.channel_links
-    #         channel = channel_links_temp.pop()
-    #         channel_url = channel
-    #         try:
-    #             response = urllib.request.urlopen(
-    #                 urllib.request.Request(channel_url, headers={'User-Agent': self.user_agent}))
-    #             soup = BeautifulSoup(response, "html.parser")
-    #             x = soup.find('div', {"class": "lista"}).select('ul li')
-    #             # find program category and insert into database
-    #             for line in x:
-    #                 dictColumnValues = {}
-    #                 url2 = "http://www.telemagazyn.pl" + line.a['href']
-    #                 response2 = urllib.request.urlopen(
-    #                     urllib.request.Request(url2, headers={'User-Agent': self.user_agent}))
-    #                 soup = BeautifulSoup(response2, "html.parser")
-    #                 x2 = soup.find("meta", {"itemprop": "genre"})['content']
-    #                 dictColumnValues.update({'ProgramCategoryName': x2})
-    #                 # self.dbInsert('dimProgramCategory', dictColumnValues)
-    #                 # writeToFile('D:\szkola\HD_WAT\datascraper\dimProgramCategory.txt', dictColumnValues + '\n')
-    #         except Exception as e:
-    #             print(e)
-    #     else:
-    #         self.running = False
-
     @staticmethod
     def getChannelLinks(self):
-        self.dbConnection(self)
         url = "http://www.telemagazyn.pl/stacje/"
         response = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': self.user_agent}))
         soup = BeautifulSoup(response, "html.parser")
@@ -148,62 +124,40 @@ class HDWAT(threading.Thread):
         except Exception as e:
             print(e)
 
-    # @staticmethod
-    # def getChannels(self):
-    #     self.dbConnection(self)
-    #     url2 = "http://www.telemagazyn.pl/stacje/"
-    #     response = urllib.request.urlopen(urllib.request.Request(url2, headers={'User-Agent': self.user_agent}))
-    #     soup = BeautifulSoup(response, "html.parser")
-    #     # try:
-    #     x = soup.find('div', {"class": "listaStacji"}).select('.polska > a')
-    #     for link in x:
-    #         dictColumnValues = {'ChannelName': link.text.strip()}
-    #         self.dbInsert(self, 'dimChannel', dictColumnValues)
-    #         # except Exception as e:
-    #         #     print(e)
+    @staticmethod
+    def getChannels(self):
+        file = open('D:\szkola\HD_WAT\datascraper\Channels.txt', 'w', encoding='UTF_8')
+        file.write(
+            'channelName|channelNameURL\n')
+        url2 = "http://www.telemagazyn.pl/stacje/"
+        response = urllib.request.urlopen(urllib.request.Request(url2, headers={'User-Agent': self.user_agent}))
+        soup = BeautifulSoup(response, "html.parser")
+        try:
+            x = soup.find('div', {"class": "listaStacji"}).select('.polska > a')
+            for link in x:
+                file.write(link.text.strip() + '|' + link['href'].replace('/', '')+'\n')
+        except Exception as e:
+            print(e)
+        file.close()
 
     @staticmethod
     def insertHeaders():
-        file = open('D:\szkola\HD_WAT\datascraper\Program.txt', 'w', encoding='UTF-8')
-        file.write('ProgramName|ageLimit|ProgramDescription|programCategory|timeStart|timeEnd|duration|Date\n')
+        file = open('D:\szkola\HD_WAT\datascraper\Program_2.txt', 'w', encoding='UTF_8')
+        file.write(
+            'ProgramName|ageLimit|ProgramDescription|programCategory|timeStart|timeEnd|duration|Date|channelNameURL\n')
         file.close()
-
-    # def dbConnection(self):
-    #     # decoding password bytes from base64 to string
-    #     password = base64.b64decode('dummy').decode("utf-8")
-    #     self.connection = pypyodbc.connect('Driver={SQL Server};'
-    #                                        'Server=10.22.24.123;'
-    #                                        'Database=TV_DW;'
-    #                                        'uid=sa;pwd=' + password)
-
-    # def dbInsert(self, tablename, dictColumnValues):
-    #     cursor = self.connection.cursor()
-    #     tempdict = dictColumnValues
-    #     checkIfExistsSQL = 'SELECT COUNT(1) FROM ' + tablename + ' where ' + list(tempdict.keys())[0] + '= \'' + \
-    #                        list(tempdict.values())[0] + '\';'
-    #
-    #     if not cursor.execute(checkIfExistsSQL).fetchone()[0]:
-    #         query = 'INSERT INTO ' + tablename + '({0}) VALUES ({1});'
-    #         columns = ','.join(tempdict.keys())
-    #         placeholders = ','.join(['?'] * len(tempdict))
-    #         values = tuple(tempdict.values())
-    #         query = query.format(columns, placeholders)
-    #         cursor.execute(query, values)
-    #         cursor.commit()
 
     def run(self):
         while self.running:
             self.getPrograms()
-            # self.getPrograms()
 
-
-# HDWAT.getChannels(HDWAT)
-HDWAT.insertHeaders()
-HDWAT.getChannelLinks(HDWAT)
-i = 0
-threads = [HDWAT(i) for i in range(0, 10)]
-for t in threads:
-    # try:
-    t.start()
-    # except Exception as e:
-    #    print(e)
+HDWAT.getChannels(HDWAT)
+# HDWAT.insertHeaders()
+# HDWAT.getChannelLinks(HDWAT)
+# i = 0
+# threads = [HDWAT(i) for i in range(0, 15)]
+# for t in threads:
+#     try:
+#         t.start()
+#     except Exception as e:
+#         print(e)

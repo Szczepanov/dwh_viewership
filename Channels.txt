@@ -1,0 +1,214 @@
+channelName|channelNameURL
+13 Ulica|13_ulica
+4Fun Fit&Dance|tv_disco
+4Fun Hits|mjuzik_tv
+4FUN TV|4fun_tv
+Adventure TV|adventure_tv
+Al Jazeera|al_jazeera
+ale kino+|ale_kino
+AMC (dawniej MGM)|amc
+Animal Planet HD|animal_planete_hd
+ATM Rozrywka|atm_rozrywka
+AXN Black|axn_black
+AXN Crime|axn_crime
+AXN Sci-fi|axn_sci_fi
+AXN Spin|axn_spin
+AXN White|axn_white
+AXN|axn
+Baby TV|baby_tv
+BBC Brit|bbc_brit
+BBC Cbeebies|bbc_cbeebies
+BBC Earth|bbc_earth
+BBC HD|bbc_hd
+BBC Lifestyle|bbc_lifestyle
+BBC World News|bbc_world_news
+BBC|bbc
+Bloomberg Europe|bloomberg_europe
+Boomerang|boomerang
+CANAL+ Discovery|canal_discovery
+CANAL+ Family|canal_family
+CANAL+ Film|canal_film
+CANAL+ Seriale|canal_seriale
+CANAL+ Sport 2|canal_sport_2
+CANAL+ Sport|canal_sport
+CANAL+1|canal_1
+CANAL+|canal
+Cartoon Network (PL)|cartoon_network_pl
+CBS Action|cbs_action
+CBS Drama|cbs_drama
+CBS Europa|cbs_europa
+CBS Reality|cbs_reality
+CI POLSAT|crime_investigation_network_polsat
+Cinemax 2|cinemax_2
+Cinemax|cinemax
+CNN|cnn
+Comedy Central Family|comedy_central_family
+Comedy Central|comedy_central
+CT 1 (PL)|ct_1_pl
+CT 2|ct_2
+DaVinci Learning|davinci_learning
+Disco Polo Music|disco_polo_music
+Discovery Historia|discovery_historia
+Discovery Life|discovery_life
+Discovery Science|discovery_science
+Discovery Turbo Xtra|discovery_turbo_xtra
+Discovery|discovery
+Disney Channel|disney_channel
+Disney Junior|disney_junior
+Disney XD|disney_xd
+DOMO+|domo_tv
+E!|e
+Edusat|edusat
+Eleven Sports|eleven_sports
+Eleven|eleven
+EskaTV|eskatv
+Euronews (ANG)|euronews_ang
+Eurosport 1|eurosport
+Eurosport 2|eurosport_2
+Extreme Sports|extreme_sports
+Fashion TV (PL)|fashion_tv_pl
+FightBox|fightbox
+FightKlub|fight_klub
+FilmBox Action|filmbox_action
+FilmBox ArtHouse|filmbox_arthouse
+Filmbox Extra|filmbox_extra
+Filmbox Family|filmbox_family
+Filmbox HD|filmbox_hd
+Filmbox|filmbox
+FOKUS TV|fokus_tv
+FOX Comedy|fox_comedy
+Fox HD|fox_hd
+France 2|france_2
+France 24|france_24
+H2|h2
+HBO2|hbo2
+HBO3|hbo3
+HBO|hbo
+HISTORY|history
+Investigation Discovery (ID)|investigation_discovery
+ITV|itv
+iTVN|itvn
+Jim Jam|jim_jam
+Kablówka TOYA Łódź|kablowka_toya_lodz
+Kablówka WTK Poznań|kablowka_wtk_poznan
+Kino Polska Muzyka|kino_polska_muzyka
+Kino Polska|kino_polska
+kuchnia+|kuchniatv
+Lifetime|lifetime
+LOVE|love
+Mango 24|mango_24
+MCM POP|mcm_pop
+MCM TOP|mcm_top
+Mezzo|mezp
+MiniMini+|minimini
+Motowizja|motowizja
+MTV Polska|mtv_polska
+Nat Geo People|nat_geo_people
+Nat Geo Wild|nat_geo_wild
+National Geographic|national_geographic
+Nickelodeon HD|nickelodeon_hd
+Nickelodeon Junior|nickelodeon_junior
+Nickelodeon|nickelodeon
+NOVA|nova
+nSPORT+|nsport
+ONTV|ontv
+Orange Sport|orange_sport
+Paramount Channel|paramount_channel
+PLANETE+|planete
+Polo TV|polo_tv
+Polonia 1|polonia_1
+Polsat 2|polsat_2
+Polsat Cafe|polsat_cafe
+Polsat Film|polsat_film
+Polsat News 2|polsat_news_2
+Polsat News|polsat_news
+Polsat Play|polsat_play
+Polsat Romans|polsat_romans
+Polsat Sport 2|polsat_sport_2
+Polsat Sport 3|polsat_sport_3
+Polsat Sport Extra|polsat_sport_extra
+Polsat Sport HD|polsat_sport_hd
+Polsat Sport News|polsat_sport_news
+Polsat Sport|polsat_sport
+Polsat Viasat Explorer|polsat_viasat_explorer
+Polsat Viasat History|polsat_viasat_history
+Polsat Viasat Nature|polsat_viasat_nature
+Polsat|polsat
+Polskie Radio Program 1|polskie_radio_program_1
+Polskie Radio Program 2|polskie_radio_program_2
+Polskie Radio Program 3|polskie_radio_program_3
+Power TV|power_tv
+PRO 7|pro_7
+Radio Polskie Przeboje|radio_polskie_przeboje
+Radio Zet|radio_zet
+Religia TV|religia_tv
+RMF Classic|rmf_classic
+RMF FM|rmf_fm
+RMF Maxxx|rmf_maxxx
+Romance TV|romance_tv
+Sci-Fi Universal|scifi_channel
+SportKlub|sport_klub
+Stars TV|stars_tv
+Stopklatka TV|stopklatka_tv
+Sundance Channel HD|sundance_channel_hd
+Superstacja|superstacja
+Tele 5|tele_5
+teleTOON+|teletoon
+TLC|tlc
+TNT (dawniej TCM)|tnt
+TOK FM|tok_fm
+Trace Urban|trace_urban
+Travel Channel|travel_channel
+TTV|ttv
+TV 1000|tv_1000
+TV 4|tv_4
+TV 5 monde|tv_5_monde
+TV Puls 2|tv_puls_2
+TV Puls|tv_puls
+TV Republika|tv_republika
+TV Silesia|tv_silesia
+TV Trwam|tv-trwam
+TV6|tv6
+TVE|tve
+TVN 24 Biznes i Świat|tvn_24_biznes_i_swiat
+TVN 24|tvn_24
+TVN 7|tvn_7
+TVN Fabuła|tvn_fabula
+TVN Meteo Active|tvn_meteo_active
+TVN Style|tvn_style
+TVN Turbo|tvn_turbo
+TVN|tvn
+TVP 1|tvp_1
+TVP 2|tvp_2
+TVP ABC|tvp_abc
+TVP HD|tvp_hd
+TVP Historia|tvp_historia
+TVP INFO|tvp_info
+TVP Kultura|tvp_kultura
+TVP Polonia|tvp_polonia
+TVP Rozrywka|tvp_rozrywka
+TVP Seriale|tvp_seriale
+TVP Sport|tvp_sport
+TVP3 Białystok|tvp3_bialystok
+TVP3 Bydgoszcz|tvp3_bydgoszcz
+TVP3 Gdańsk|tvp3_gdansk
+TVP3 Gorzów Wielkopolski|tvp3_gorzow_wielkopolski
+TVP3 Katowice|tvp3_katowice
+TVP3 Kielce|tvp3_kielce
+TVP3 Kraków|tvp3_krakow
+TVP3 Lublin|tvp3_lublin
+TVP3 Łódź|tvp3_lodz
+TVP3 Olsztyn|tvp3_olsztyn
+TVP3 Opole|tvp3_opole
+TVP3 Poznań|tvp3_poznan
+TVP3 Rzeszów|tvp3_rzeszow
+TVP3 Szczecin|tvp3_szczecin
+TVP3 Warszawa|tvp3_warszawa
+TVP3 Wrocław|tvp3_wroclaw
+TVP3|tvp3
+TVR|tvr
+Universal Channel|universal_channel
+VH1 Classic|vh1_classic
+Viasat History HD/Viasat Nature HD|viasat_history_viasat_nature
+VIVA|viva
+Zest TV|zest_tv
