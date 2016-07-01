@@ -1,12 +1,12 @@
-import base64
 import threading
-import urllib.request
 import urllib.error
 import urllib.parse
+import urllib.request
 from datetime import timedelta, date
-import pypyodbc
-from bs4 import BeautifulSoup
 from urllib.parse import urlparse
+
+from bs4 import BeautifulSoup
+import logging
 
 
 class HDWAT(threading.Thread):
@@ -16,8 +16,12 @@ class HDWAT(threading.Thread):
     start_date = date(2016, 7, 1)
     end_date = date(2016, 7, 8)
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19'
+    FORMAT = "%(asctime)s %(message)s"
+    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+    logger = logging.getLogger(__name__)
 
     def __init__(self, id):
+        self.logger.info('Initializing thread #%s', id)
         self.id = str(id)
         threading.Thread.__init__(self)
 
@@ -34,11 +38,13 @@ class HDWAT(threading.Thread):
                     'http://www.telemagazyn.pl/'):str(channel).find('/?dzien=')])
             except Exception:
                 channelNameURL = ''
+            self.logger.debug('Thread #%s: channelNameURL=%s', self.id, channelNameURL)
             try:
                 airDate = str(channel[str(channel).find('dzien=') + len('dzien='):])
             except Exception:
                 airDate = ''
-            file = open('D:\szkola\HD_WAT\datascraper\Program_2.txt', 'a+', encoding='UTF_8')
+            self.logger.debug('Thread #%s: airDate=%s', self.id, airDate)
+            file = open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'a+', encoding='UTF_8')
             # THREAD ID + channel for testing
             # file.write(str(self.id) + ': '+ str(channel) +'\n')
             response = urllib.request.urlopen(
@@ -52,19 +58,20 @@ class HDWAT(threading.Thread):
                         programName = str(line2.find('span').text.strip()).replace('\r\n', ' ')
                     except Exception:
                         programName = ''
+                    self.logger.debug('Thread #%s: programName=%s', self.id, programName)
                     try:
-                        programDescription = str(line2.find('p').text.strip()).splitlines().replace('\r\n',
-                                                                                                    ' ').replace('\r',
-                                                                                                                 '').replace(
+                        programDescription = str(line2.find('p').text.strip()).replace('\r\n', ' ').replace('\r',
+                                                                                                            '').replace(
                             '\n', ' ')
-
                     except Exception:
                         programDescription = ''
+                    self.logger.debug('Thread #%s: programDescription=%s', self.id, programDescription)
                     try:
 
                         timeStart = line2.find('em').text.strip()
                     except Exception:
                         timeStart = '0'
+                    self.logger.debug('Thread #%s: timeStart=%s', self.id, timeStart)
                     try:
                         index = x.index(line2)
                         next_value = x[index + 1] if index + 1 < len(x) else None
@@ -74,6 +81,7 @@ class HDWAT(threading.Thread):
                             timeEnd = '0'
                     except Exception:
                         timeEnd = '0'
+                    self.logger.debug('Thread #%s: timeEnd=%s', self.id, timeEnd)
                     try:
                         url2 = "http://www.telemagazyn.pl" + line2.a['href']
 
@@ -82,20 +90,29 @@ class HDWAT(threading.Thread):
                         soup = BeautifulSoup(response2, "html.parser")
                         try:
                             programCategory = soup.find("meta", {"itemprop": "genre"})['content']
-                        except TypeError:
+                        except Exception:
                             programCategory = '0'
+                        self.logger.debug('Thread #%s: programCategory=%s', self.id, programCategory)
                         try:
                             ageLimitTemp = soup.find("h1")['class']
                             ageLimit = ''.join(ageLimitTemp)[4:]
                         except Exception:
                             ageLimit = '0'
+                        self.logger.debug('Thread #%s: ageLimit=%s', self.id, ageLimit)
                         try:
                             duration = soup.find("meta", {"itemprop": "timeRequired"})['content']
                         except Exception:
                             duration = '0'
-                        file.write(str(programName) + '|' + str(ageLimit) + '|' + str(programDescription) + '|' + str(
+                        self.logger.debug('Thread #%s: duration=%s', self.id, duration)
+                        self.logger.info('Thread #%s started writing to a file.', self.id)
+                        content_to_write = str(programName) + '|' + str(ageLimit) + '|' + str(
+                            programDescription) + '|' + str(
                             programCategory) + '|' + str(timeStart) + '|' + str(timeEnd) + '|' + str(
-                            duration) + '|' + str(airDate) + '|' + str(channelNameURL) + '\n')
+                            duration) + '|' + str(airDate) + '|' + str(channelNameURL) + '\n'
+
+                        file.write(content_to_write)
+                        self.logger.debug('Thread #%s: %s', self.id, content_to_write)
+                        self.logger.info('Thread #%s finished writing to a file.', self.id)
                     except Exception:
                         pass
             except TypeError:
@@ -119,10 +136,10 @@ class HDWAT(threading.Thread):
                         '\'"')
                     url_test = urlparse(url)
                     if url_test.scheme == 'http':
+                        self.logger.debug('scheme=%s url=%s', url_test.scheme, url)
                         self.channel_links.append(url)
-
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
 
     @staticmethod
     def getChannels(self):
@@ -135,14 +152,16 @@ class HDWAT(threading.Thread):
         try:
             x = soup.find('div', {"class": "listaStacji"}).select('.polska > a')
             for link in x:
-                file.write(link.text.strip() + '|' + link['href'].replace('/', '')+'\n')
-        except Exception as e:
-            print(e)
+                content = str(link.text.strip() + '|' + link['href'].replace('/', '') + '\n')
+                file.write(content)
+                self.logger.debug('content=%s', content)
+        except Exception:
+            pass
         file.close()
 
     @staticmethod
     def insertHeaders():
-        file = open('D:\szkola\HD_WAT\datascraper\Program_2.txt', 'w', encoding='UTF_8')
+        file = open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'w', encoding='UTF_8')
         file.write(
             'ProgramName|ageLimit|ProgramDescription|programCategory|timeStart|timeEnd|duration|Date|channelNameURL\n')
         file.close()
@@ -151,13 +170,14 @@ class HDWAT(threading.Thread):
         while self.running:
             self.getPrograms()
 
-HDWAT.getChannels(HDWAT)
-# HDWAT.insertHeaders()
-# HDWAT.getChannelLinks(HDWAT)
-# i = 0
-# threads = [HDWAT(i) for i in range(0, 15)]
-# for t in threads:
-#     try:
-#         t.start()
-#     except Exception as e:
-#         print(e)
+
+# HDWAT.getChannels(HDWAT)
+HDWAT.insertHeaders()
+HDWAT.getChannelLinks(HDWAT)
+i = 0
+threads = [HDWAT(i) for i in range(0, 15)]
+for t in threads:
+    try:
+        t.start()
+    except Exception as e:
+        print(e)
