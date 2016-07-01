@@ -12,17 +12,23 @@ import logging
 class HDWAT(threading.Thread):
     running = True
     connection = None
-    channel_links = []
-    start_date = date(2016, 7, 1)
-    end_date = date(2016, 7, 8)
+    channel_links = set()
+    start_date = date(2010, 1, 1)
+    end_date = date(2016, 7, 1)
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19'
     FORMAT = "%(asctime)s %(message)s"
-    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+    logging.basicConfig(level=logging.INFO, format=FORMAT)
+    fileHandler = logging.FileHandler('D:\szkola\HD_WAT\datascraper\logs.txt', mode='w+', encoding='UTF_8')
+    formatter = logging.Formatter(FORMAT)
+    fileHandler.setFormatter(formatter)
     logger = logging.getLogger(__name__)
+    logger.addHandler(fileHandler)
+    logger.propagate = False
 
-    def __init__(self, id):
+    def __init__(self, id, lock):
         self.logger.info('Initializing thread #%s', id)
         self.id = str(id)
+        self.lock = lock
         threading.Thread.__init__(self)
 
     def daterange(self, start_date, end_date):
@@ -31,8 +37,8 @@ class HDWAT(threading.Thread):
 
     def getPrograms(self):
         if self.channel_links:
-            channel_links_temp = self.channel_links
-            channel = channel_links_temp.pop()
+            channel = self.channel_links.pop()
+            self.logger.debug('Thread #%s: Popped channel=%s', self.id, channel)
             try:
                 channelNameURL = str(channel[str(channel).find('http://www.telemagazyn.pl/') + len(
                     'http://www.telemagazyn.pl/'):str(channel).find('/?dzien=')])
@@ -44,7 +50,6 @@ class HDWAT(threading.Thread):
             except Exception:
                 airDate = ''
             self.logger.debug('Thread #%s: airDate=%s', self.id, airDate)
-            file = open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'a+', encoding='UTF_8')
             # THREAD ID + channel for testing
             # file.write(str(self.id) + ': '+ str(channel) +'\n')
             response = urllib.request.urlopen(
@@ -104,20 +109,22 @@ class HDWAT(threading.Thread):
                         except Exception:
                             duration = '0'
                         self.logger.debug('Thread #%s: duration=%s', self.id, duration)
-                        self.logger.info('Thread #%s started writing to a file.', self.id)
                         content_to_write = str(programName) + '|' + str(ageLimit) + '|' + str(
                             programDescription) + '|' + str(
                             programCategory) + '|' + str(timeStart) + '|' + str(timeEnd) + '|' + str(
                             duration) + '|' + str(airDate) + '|' + str(channelNameURL) + '\n'
-
-                        file.write(content_to_write)
+                        self.lock.acquire()
+                        self.logger.debug('Thread #%s: LOCK ACQUIRED for writing' % self.id)
+                        with open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'a+', encoding='UTF_8') as file:
+                            file.write(content_to_write)
                         self.logger.debug('Thread #%s: %s', self.id, content_to_write)
-                        self.logger.info('Thread #%s finished writing to a file.', self.id)
-                    except Exception:
-                        pass
+                        self.lock.release()
+                        self.logger.debug('Thread #%s: LOCK RELEASED for writing' % self.id)
+                    except Exception as mainException :
+                        self.logger.debug('Thread #%s: Exception %s' % mainException)
             except TypeError:
                 pass
-            file.close()
+            #file.close()
         else:
             self.running = False
 
@@ -137,7 +144,7 @@ class HDWAT(threading.Thread):
                     url_test = urlparse(url)
                     if url_test.scheme == 'http':
                         self.logger.debug('scheme=%s url=%s', url_test.scheme, url)
-                        self.channel_links.append(url)
+                        self.channel_links.add(url)
         except Exception:
             pass
 
@@ -175,7 +182,8 @@ class HDWAT(threading.Thread):
 HDWAT.insertHeaders()
 HDWAT.getChannelLinks(HDWAT)
 i = 0
-threads = [HDWAT(i) for i in range(0, 15)]
+lock = threading.Lock()
+threads = [HDWAT(id=i, lock=lock) for i in range(0, 30)]
 for t in threads:
     try:
         t.start()
