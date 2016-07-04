@@ -14,7 +14,7 @@ class HDWAT(threading.Thread):
     connection = None
     channel_links = set()
     start_date = date(2010, 1, 1)
-    end_date = date(2016, 7, 1)
+    end_date = date(2016, 7, 2)
     user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19'
     FORMAT = "%(asctime)s %(message)s"
     logging.basicConfig(level=logging.INFO, format=FORMAT)
@@ -47,8 +47,13 @@ class HDWAT(threading.Thread):
             self.logger.debug('Thread #%s: channelNameURL=%s', self.id, channelNameURL)
             try:
                 airDate = str(channel[str(channel).find('dzien=') + len('dzien='):])
+                airDateTempList = airDate.replace('-', ' ').split()
+                year = str(airDateTempList[0])
+                month = str(airDateTempList[1])
             except Exception:
                 airDate = ''
+                year = '2016'
+                month = '01'
             self.logger.debug('Thread #%s: airDate=%s', self.id, airDate)
             # THREAD ID + channel for testing
             # file.write(str(self.id) + ': '+ str(channel) +'\n')
@@ -109,22 +114,22 @@ class HDWAT(threading.Thread):
                         except Exception:
                             duration = '0'
                         self.logger.debug('Thread #%s: duration=%s', self.id, duration)
-                        content_to_write = str(programName) + '|' + str(ageLimit) + '|' + str(
-                            programDescription) + '|' + str(
-                            programCategory) + '|' + str(timeStart) + '|' + str(timeEnd) + '|' + str(
-                            duration) + '|' + str(airDate) + '|' + str(channelNameURL) + '\n'
+                        content_to_write = '%s|%s|%s|%s|%s|%s|%s|%s|%s\n' % (
+                            programName, ageLimit, programDescription, programCategory, timeStart, timeEnd, duration,
+                            airDate, channelNameURL)
                         self.lock.acquire()
                         self.logger.debug('Thread #%s: LOCK ACQUIRED for writing' % self.id)
-                        with open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'a+', encoding='UTF_8') as file:
+                        with open('D:\szkola\HD_WAT\datascraper\\%s\Programs_%s.txt' % (year, month), 'a+',
+                                  encoding='UTF_8') as file:
                             file.write(content_to_write)
                         self.logger.debug('Thread #%s: %s', self.id, content_to_write)
                         self.lock.release()
                         self.logger.debug('Thread #%s: LOCK RELEASED for writing' % self.id)
-                    except Exception as mainException :
+                    except Exception as mainException:
                         self.logger.debug('Thread #%s: Exception %s' % mainException)
             except TypeError:
                 pass
-            #file.close()
+                # file.close()
         else:
             self.running = False
 
@@ -168,10 +173,16 @@ class HDWAT(threading.Thread):
 
     @staticmethod
     def insertHeaders():
-        file = open('D:\szkola\HD_WAT\datascraper\Programs.txt', 'w', encoding='UTF_8')
-        file.write(
-            'ProgramName|ageLimit|ProgramDescription|programCategory|timeStart|timeEnd|duration|Date|channelNameURL\n')
-        file.close()
+        for year in range(2010, 2016 + 1):
+            for month in range(1, 12 + 1):
+                if month < 10:
+                    filename = 'Programs_0'
+                else:
+                    filename = 'Programs_'
+                with open('D:\szkola\HD_WAT\datascraper\\%s\%s%s.txt' % (year, filename, month), 'w',
+                          encoding='UTF_8') as file:
+                    file.write(
+                        'ProgramName|ageLimit|ProgramDescription|programCategory|timeStart|timeEnd|duration|Date|channelNameURL\n')
 
     def run(self):
         while self.running:
